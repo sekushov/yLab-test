@@ -85,17 +85,22 @@ function form() {
                 method: "POST",
                 body: JSON.stringify(objFormData)
             })
-            .then(data => data.text())
             .then(data => {
+                if (data.ok) {
+                    return data.text()
+                } else {
+                    throw new Error()
+                }
+            }).then(data => {
                 dataFromServer = data;
                 showInfoModal(message(dataFromServer).success);
-                messageStatus.remove();
                 showLoggedInInterface()
             }).catch(() => {
                 showInfoModal(message().failure);
                 messageStatus.remove()
             }).finally(() => {
                 form.reset();
+                messageStatus.remove();
             })
         });
     }
